@@ -13,7 +13,8 @@ Host {{ __current_org.name }}.{{ __hg.name }}.{{ __h.name }}
 {{ __hg.host_group_defaults | indent(2, true) -}}
 {% endif %}
 {% if "config" in __h %}
-{{ __h.config | indent(2, true) }}
+{{ __h.config | indent(2, true) -}}
 {% endif %}
+
 {% endfor %}
 {% endfor %}
