@@ -1,2 +1,2 @@
 # sshconfig
-Ansible role for configure ssh hosts
+Ansible role for configuring ssh hosts
