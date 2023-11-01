@@ -1,0 +1,19 @@
+{{ ansible_managed | comment}}
+
+{% for __hg in __current_org.host_groups %}
+{% for __h in __hg.hosts %}
+Host {{ __current_org.name }}.{{ __hg.name }}.{{ __h.name }}
+{% if "jump_host" in __h %}
+  ProxyJump {{ __current_org.name }}.{{ __hg.name }}.{{ (__hg.hosts | selectattr("name", "eq", __h.jump_host) | first).name }}
+{% endif %}
+{% if "org_defaults" in __current_org %}
+{{ __current_org.org_defaults | indent(2, true) -}}
+{% endif -%}
+{% if "host_group_defaults" in __hg %}
+{{ __hg.host_group_defaults | indent(2, true) -}}
+{% endif %}
+{% if "config" in __h %}
+{{ __h.config | indent(2, true) }}
+{% endif %}
+{% endfor %}
+{% endfor %}

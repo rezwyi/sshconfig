@@ -1,0 +1,30 @@
+---
+- name: Include OS specific variables
+  ansible.builtin.include_tasks: vars.yaml
+
+- name: Ensure required dirs exists
+  ansible.builtin.file:
+    path: "{{ __item }}"
+    mode: "0755"
+    state: directory
+  loop:
+    - "{{ sshconfig_conf_dir }}"
+  loop_control:
+    loop_var: __item
+
+- name: Generate org configs
+  ansible.builtin.template:
+    src: org.conf.j2
+    dest: "{{ sshconfig_conf_dir }}/{{ __current_org.name }}.conf"
+    mode: "0644"
+  loop: "{{ sshconfig_orgs }}"
+  loop_control:
+    loop_var: __current_org
+
+- name: Ensure Include directive present
+  ansible.builtin.lineinfile:
+    path: ~/.ssh/config
+    line: "Include config.d/*.conf\n"
+    search_string: "Include config.d/*.conf"
+    insertbefore: BOF
+    state: present
