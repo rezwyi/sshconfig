@@ -1,26 +1,3 @@
 ---
 sshconfig_conf_dir: ~/.ssh/config.d
-
 sshconfig_orgs: []
-#  - name: foo
-#    org_defaults: |
-#      ForwardAgent yes
-#      IdentitiesOnly yes
-#      PreferredAuthentications publickey
-#      StrictHostKeyChecking no
-#      UserKnownHostsFile /dev/null
-#    host_groups:
-#      - name: ofd
-#        host_group_defaults: |
-#          IdentityFile ~/.ssh/foo
-#          User foobar
-#        hosts:
-#          - name: host-1
-#            config: |
-#              Hostname foo.bar.baz
-#              Port 65321
-#          - name: host-2
-#            jump_host: host-1
-#            config: |
-#              Hostname localhost
-#              Port 65322
