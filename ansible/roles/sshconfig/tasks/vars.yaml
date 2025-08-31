@@ -6,3 +6,7 @@
 - name: Include variables for Ubuntu 22.04
   when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "22.04"
   ansible.builtin.include_vars: Ubuntu-22.04.yaml
+
+- name: Include variables for Ubuntu 24.04
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "24.04"
+  ansible.builtin.include_vars: Ubuntu-24.04.yaml

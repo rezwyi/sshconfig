@@ -1,20 +1,43 @@
 {{ ansible_managed | comment}}
 
+{% set __org_defaults_dict = {} %}
+{% if "org_defaults" in __current_org %}
+{% for __od_line in __current_org.org_defaults.splitlines() %}
+{% set _ = __org_defaults_dict.update({__od_line.split()[0]: __od_line.split()[1]}) %}
+{% endfor -%}
+{% endif -%}
 {% for __hg in __current_org.host_groups %}
+{% set __host_group_defaults_dict = {} %}
+{% if "host_group_defaults" in __hg %}
+{% for __hgd_line in __hg.host_group_defaults.splitlines() %}
+{% set _ = __host_group_defaults_dict.update({__hgd_line.split()[0]: __hgd_line.split()[1]}) %}
+{% endfor -%}
+{% endif -%}
 {% for __h in __hg.hosts %}
 Host {{ __current_org.name }}.{{ __hg.name }}.{{ __h.name }}
+{% set __config_dict = {} %}
 {% if "jump_host" in __h %}
-  ProxyJump {{ __current_org.name }}.{{ __hg.name }}.{{ (__hg.hosts | selectattr("name", "eq", __h.jump_host) | first).name }}
-{% endif %}
-{% if "org_defaults" in __current_org %}
-{{ __current_org.org_defaults | indent(2, true) -}}
-{% endif -%}
-{% if "host_group_defaults" in __hg %}
-{{ __hg.host_group_defaults | indent(2, true) -}}
+{% set __jump_host_name = __current_org.name ~ '.' ~ __hg.name ~ '.' ~ (__hg.hosts | selectattr('name', 'eq', __h.jump_host) | first).name %}
+{% set _ = __config_dict.update({"ProxyJump": __jump_host_name}) %}
 {% endif %}
 {% if "config" in __h %}
-{{ __h.config | indent(2, true) -}}
-{% endif %}
+{% for __hc_line in __h.config.splitlines() %}
+{% set _ = __config_dict.update({__hc_line.split()[0]: __hc_line.split()[1]}) %}
+{% endfor -%}
+{% endif -%}
+{% for __k, __v in __host_group_defaults_dict.items() %}
+{% if __k not in __config_dict %}
+{% set _ = __config_dict.update({__k: __v}) %}
+{% endif -%}
+{% endfor -%}
+{% for __k, __v in __org_defaults_dict.items() %}
+{% if __k not in __config_dict %}
+{% set _ = __config_dict.update({__k: __v}) %}
+{% endif -%}
+{% endfor -%}
+{% for __k, __v in __config_dict.items() | sort(attribute="0") %}
+  {{ __k }} {{ __v }}
+{% endfor %}
 
 {% endfor %}
 {% endfor %}
