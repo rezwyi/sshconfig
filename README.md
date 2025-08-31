@@ -72,13 +72,13 @@ Host foo.bar.host-1
   UserKnownHostsFile /dev/null
 
 Host foo.bar.host-2
-  ProxyJump foo.bar.host-1
   ForwardAgent yes
   Hostname hostname-2
   IdentitiesOnly yes
   IdentityFile ~/.ssh/foo
   Port 65322
   PreferredAuthentications publickey
+  ProxyJump foo.bar.host-1
   StrictHostKeyChecking no
   User barbaz
   UserKnownHostsFile /dev/null
