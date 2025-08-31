@@ -15,10 +15,11 @@
 {% endif -%}
 {% for __h in __hg.hosts %}
 Host {{ __current_org.name }}.{{ __hg.name }}.{{ __h.name }}
-{% if "jump_host" in __h %}
-  ProxyJump {{ __current_org.name }}.{{ __hg.name }}.{{ (__hg.hosts | selectattr("name", "eq", __h.jump_host) | first).name }}
-{% endif %}
 {% set __config_dict = {} %}
+{% if "jump_host" in __h %}
+{% set __jump_host_name = __current_org.name ~ '.' ~ __hg.name ~ '.' ~ (__hg.hosts | selectattr('name', 'eq', __h.jump_host) | first).name %}
+{% set _ = __config_dict.update({"ProxyJump": __jump_host_name}) %}
+{% endif %}
 {% if "config" in __h %}
 {% for __hc_line in __h.config.splitlines() %}
 {% set _ = __config_dict.update({__hc_line.split()[0]: __hc_line.split()[1]}) %}
