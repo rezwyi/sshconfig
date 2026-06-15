@@ -3,14 +3,16 @@
 {% set __org_defaults_dict = {} %}
 {% if "org_defaults" in __current_org %}
 {% for __od_line in __current_org.org_defaults.splitlines() %}
-{% set _ = __org_defaults_dict.update({__od_line.split()[0]: __od_line.split()[1]}) %}
+{% set __splitted_line = __od_line.split(' ', 1) %}
+{% set _ = __org_defaults_dict.update({__splitted_line[0]: __splitted_line[1]}) %}
 {% endfor -%}
 {% endif -%}
 {% for __hg in __current_org.host_groups %}
 {% set __host_group_defaults_dict = {} %}
 {% if "host_group_defaults" in __hg %}
 {% for __hgd_line in __hg.host_group_defaults.splitlines() %}
-{% set _ = __host_group_defaults_dict.update({__hgd_line.split()[0]: __hgd_line.split()[1]}) %}
+{% set __splitted_line = __hgd_line.split(' ', 1) %}
+{% set _ = __host_group_defaults_dict.update({__splitted_line[0]: __splitted_line[1]}) %}
 {% endfor -%}
 {% endif -%}
 {% for __h in __hg.hosts %}
@@ -22,7 +24,8 @@ Host {{ __current_org.name }}.{{ __hg.name }}.{{ __h.name }}
 {% endif %}
 {% if "config" in __h %}
 {% for __hc_line in __h.config.splitlines() %}
-{% set _ = __config_dict.update({__hc_line.split()[0]: __hc_line.split()[1]}) %}
+{% set __splitted_line = __hc_line.split(' ', 1) %}
+{% set _ = __config_dict.update({__splitted_line[0]: __splitted_line[1]}) %}
 {% endfor -%}
 {% endif -%}
 {% for __k, __v in __host_group_defaults_dict.items() %}
